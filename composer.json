@@ -1,0 +1,24 @@
+{
+  "require": {
+    "mihoshi/hashvalidator": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "cvOutput\\" : "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+        "tests\\": "tests/"
+    }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/m-seikou/hashValidator.git"
+    }
+  ]
+}
