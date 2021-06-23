@@ -12,14 +12,6 @@ class outputTest extends TestCase
      */
     public function test_construct()
     {
-        new output("../tests/testData/interface", "./tests/testData");
-    }
-
-    /**
-     * @doesNotPerformAssertions
-     */
-    public function _test_csharp()
-    {
-        (new output("../tests/testData/testdata.yml", "./tests/testData"))->csharp();
+        new output("../tests/testData/input", "./tests/testData/output");
     }
 }
