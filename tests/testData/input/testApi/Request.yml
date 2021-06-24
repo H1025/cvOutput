@@ -1,42 +1,37 @@
 ---
 type: cvOutput\language\ClassRule
 nameSpace: test
-comment: 
+comment:
   description: APIの説明
 
 key:
   api:
     type: hash
     key:
-      tests:
-        type: list
-        rule:
-          type: hash
-          key:
-            test1:
-              type: int
-              comment: 
-                description: テスト
-                example: 999
-            test2:
-              type: string
-              comment: 
-                description: テスト
-                example: hogehoge
-            test3:
-              type: string
-              comment: 
-                description: テスト
-                example: fugafuga
-            areaRank:
-              type: enum
-              value:
-                # イベント
-                - 1
-                # ブース
-                - 2
-                # 展示物
-                - 3
-              comment: 
-                description: 1=イベント 2=ブース 3=展示物
-                example: 1
+      test1:
+        type: int
+        comment:
+          description: テスト
+          example: 999
+      test2:
+        type: string
+        comment:
+          description: テスト
+          example: hogehoge
+      test3:
+        type: string
+        comment:
+          description: テスト
+          example: fugafuga
+      areaRank:
+        type: enum
+        value:
+          # イベント
+          - 1
+          # ブース
+          - 2
+          # 展示物
+          - 3
+        comment:
+          description: 1=イベント 2=ブース 3=展示物
+          example: 1

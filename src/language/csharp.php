@@ -15,12 +15,11 @@ class csharp
 
     private function output(string $className, string $outputPath, array $data)
     {
-        // $apiName = "apiName";
         $apiName = str_replace(['Request', 'Response'], '', $className);
         $fp = fopen($outputPath . DIRECTORY_SEPARATOR . $className . '.cs', 'w');
 
         fwrite($fp, 'namespace ' . 'test' . PHP_EOL . '{');
-        $this->export($fp, $data['key']['api'], $className, 1, false, $apiName);
+        $this->export($fp, $data, $className, 1, false, $apiName);
         fwrite($fp, '}');
 
         fclose($fp);
