@@ -1,7 +1,10 @@
 {
+  "name": "h1025/cvoutput",
   "require": {
     "php": ">= 7.4.0",
-    "mihoshi/hashvalidator": "*"
+    "mihoshi/hashvalidator": "*",
+    "ext-yaml":"*",
+    "ext-json":"*"
   },
   "require-dev": {
     "phpunit/phpunit": "*"
