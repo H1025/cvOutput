@@ -20,17 +20,19 @@ class apiListMD
 
         $apiName = $this->getApiName($inputPath);
         // var_dump($apiName);
-        $text = str_replace(['@list@', '@info@'],
+        $text = str_replace(
+            ['@list@', '@info@'],
             [
                 '',
                 $infoTmpl
             ],
-        $listTmpl);
+            $listTmpl
+        );
 
         $fp = fopen($outputPath . DIRECTORY_SEPARATOR . 'README.md', 'w');
         fwrite($fp, $text);
         fclose($fp);
-    }    
+    }
 
     private function createAPIListMD(string $outputFile, array $apiData): bool
     {
