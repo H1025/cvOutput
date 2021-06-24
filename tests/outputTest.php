@@ -12,6 +12,9 @@ class outputTest extends TestCase
      */
     public function test_construct()
     {
-        new output("../tests/testData/input", "./tests/testData/output");
+        new output(
+            __DIR__ . DIRECTORY_SEPARATOR .'./testData/input',
+            __DIR__ . DIRECTORY_SEPARATOR .'./testData/output'
+        );
     }
 }

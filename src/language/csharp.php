@@ -8,15 +8,13 @@ class csharp
      * @param string $inputPath
      * @param string $outputPath
      */
-    public function __construct(string $fileName, string $outputPath, array $data)
+    public function __construct(string $className, string $outputPath, array $data)
     {
-        $this->output($fileName, $outputPath, $data);
+        $this->output($className, $outputPath, $data);
     }
 
-    private function output(string $fileName, string $outputPath, array $data)
+    private function output(string $className, string $outputPath, array $data)
     {
-        $className = basename($fileName, '.yml');
-
         $apiName = "apiName";
 
         $fp = fopen($outputPath . DIRECTORY_SEPARATOR . $className . '.cs', 'w');
