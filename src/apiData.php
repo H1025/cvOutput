@@ -38,11 +38,10 @@ class apiData
     public string $direction;
     // 
     public array $dump;
-    
+
     public function __construct(array $data)
     {
-        foreach($data as $key => $value)
-        {
+        foreach ($data as $key => $value) {
             if (!property_exists($this, $key)) {
                 continue;
             }

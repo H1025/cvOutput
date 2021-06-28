@@ -7,8 +7,8 @@ use InvalidArgumentException;
 class apiListMD
 {
     private string $listTmpl;
-    private string $listText = '';
     private string $infoTmpl;
+    private string $listText = '';
     private string $infoText = '';
 
     public function __construct()
@@ -45,19 +45,6 @@ class apiListMD
     }
 
     /**
-     * RequestとResponseのデータが存在するかどうか
-     *
-     * @param array $data
-     * @return void
-     */
-    private function directionExist(array $data)
-    {
-        if (!(array_key_exists('response', $data) && array_key_exists('request', $data))) {
-            throw new InvalidArgumentException();
-        }
-    }
-
-    /**
      * 一覧と詳細を合わせて出力する
      *
      * @param string $outputPath
@@ -80,6 +67,19 @@ class apiListMD
     }
 
     /**
+     * RequestとResponseのデータが存在するかどうか
+     *
+     * @param array $data
+     * @return void
+     */
+    private function directionExist(array $data)
+    {
+        if (!(array_key_exists('response', $data) && array_key_exists('request', $data))) {
+            throw new InvalidArgumentException();
+        }
+    }
+
+    /**
      * キーの詳細文作成
      *
      * @param string $direction requestかresponse
@@ -91,7 +91,11 @@ class apiListMD
         $apiData = $this->createDisplay($data[$direction]['dump']);
 
         $this->infoText = str_replace(
-            ["@$direction" . 'ClassName@', "@$direction@", "@$direction" . 'Info@'],
+            [
+                "@$direction" . 'ClassName@',
+                "@$direction@",
+                "@$direction" . 'Info@'
+            ],
             [
                 $data[$direction]['className'],
                 $this->jsonEncode($apiData['sample']),

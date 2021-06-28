@@ -4,7 +4,7 @@ namespace cvOutput;
 
 use cvOutput\language\csharp;
 use cvOutput\apiList\apiListMD;
-
+use InvalidArgumentException;
 use mihoshi\hashValidator\hashValidator;
 
 class output
@@ -26,9 +26,9 @@ class output
     public function csharp(string $outputPath)
     {
         $csharp = new csharp();
-        foreach ($this->apiData as $data) {
-            foreach ($data as $a) {
-                $csharp->output($outputPath, $a);
+        foreach ($this->apiData as $api) {
+            foreach ($api as $data) {
+                $csharp->output($outputPath, $data);
             }
         }
     }
@@ -91,17 +91,27 @@ class output
     }
 
     /**
+     * RequestかResponseか
+     * 
      * @param string $file
      * @return string (request|response)
      */
     private function getDirection(string $file): string
     {
-        if (strpos($file, 'Request') === false) {
+        if (strpos($file, 'Request')) {
+            return 'request';
+        } elseif (strpos($file, 'Response')) {
             return 'response';
         }
-        return 'request';
+        throw new InvalidArgumentException();
     }
 
+    /**
+     * パス名からApi名取得
+     *
+     * @param string $file
+     * @return string
+     */
     private function getApiName(string $file): string
     {
         $file = strtolower($file);
