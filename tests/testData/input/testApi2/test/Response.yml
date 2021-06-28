@@ -21,15 +21,15 @@ key:
         comment:
           description: テスト
           example: fugafuga
-      areaRank:
+      test4:
         type: enum
         value:
-          # イベント
+          # enum1
           - 1
-          # ブース
+          # enum2
           - 2
-          # 展示物
+          # enum3
           - 3
         comment:
-          description: 1=イベント 2=ブース 3=展示物
+          description: 1=enum1 2=enum2 3=enum3
           example: 1
