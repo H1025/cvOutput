@@ -2,7 +2,7 @@
 
 namespace cvOutput\apiList;
 
-use cvOutput\apiData;
+use InvalidArgumentException;
 
 class apiListMD
 {
@@ -26,13 +26,13 @@ class apiListMD
             "|[%s](#%s)|%s|   \n",
             $data['apiName'],
             str_replace('/', '', $data['apiName']),
-            $data['Request']['dump']['comment']['description']
+            $data['request']['dump']['comment']['description']
         );
 
         // 出力用データ整形
         $this->infoText .= $this->infoTmpl;
-        $this->request($data['Response']);
-        $this->response($data['Response']);
+        $this->createInfo('request', $data);
+        $this->createInfo('response', $data);
 
         $this->infoText = str_replace(
             ['@name@', '@url@'],
@@ -52,9 +52,8 @@ class apiListMD
      */
     private function directionExist(array $data)
     {
-        if (!(array_key_exists('Response', $data) && array_key_exists('Request', $data))) {
-            // ない！
-
+        if (!(array_key_exists('response', $data) && array_key_exists('request', $data))) {
+            throw new InvalidArgumentException();
         }
     }
 
@@ -80,36 +79,27 @@ class apiListMD
         fclose($fp);
     }
 
-    private function request(array $data)
+    /**
+     * キーの詳細文作成
+     *
+     * @param string $direction requestかresponse
+     * @param array $data
+     * @return void
+     */
+    private function createInfo(string $direction, array $data)
     {
-        $apiData = $this->createDisplay($data['dump']);
+        $apiData = $this->createDisplay($data[$direction]['dump']);
 
         $this->infoText = str_replace(
-            ['@requestClassName@', '@request@', '@requestInfo@'],
+            ["@$direction" . 'ClassName@', "@$direction@", "@$direction" . 'Info@'],
             [
-                $data['className'],
+                $data[$direction]['className'],
                 $this->jsonEncode($apiData['sample']),
                 $this->toTableMD($apiData['param'])
             ],
             $this->infoText
         );
     }
-
-    private function response(array $data)
-    {
-        $apiData = $this->createDisplay($data['dump']);
-
-        $this->infoText = str_replace(
-            ['@responceClassName@', '@responce@', '@responceInfo@'],
-            [
-                $data['className'],
-                $this->jsonEncode($apiData['sample']),
-                $this->toTableMD($apiData['param'])
-            ],
-            $this->infoText
-        );
-    }
-
 
     /**
      * 表示するデータの作成
@@ -162,7 +152,7 @@ class apiListMD
                     'lineNo' => $count,
                     'name' => $value,
                     'type' => $valueData['rule']['type'] . '[]',
-                    'comment' => $valueData['comment'],
+                    'comment' => $valueData['comment']['description'],
                 ];
             } else {
                 $keys['sample'][$value] = $valueData['message'];
@@ -171,7 +161,7 @@ class apiListMD
                     'lineNo' => $count,
                     'name' => $value,
                     'type' => $valueData['type'],
-                    'comment' => $valueData['comment'],
+                    'comment' => $valueData['comment']['description'],
                 ];
             }
 

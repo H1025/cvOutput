@@ -97,9 +97,9 @@ class output
     private function getDirection(string $file): string
     {
         if (strpos($file, 'Request') === false) {
-            return 'Response';
+            return 'response';
         }
-        return 'Request';
+        return 'request';
     }
 
     private function getApiName(string $file): string
