@@ -5,21 +5,22 @@ namespace cvOutput\language;
 class csharp
 {
     /**
-     * @param string $inputPath
+     * Undocumented function
+     *
+     * @param string $className
      * @param string $outputPath
+     * @param array $data
+     * @return void
      */
-    public function __construct(string $className, string $outputPath, array $data)
+    public function output(string $outputPath, array $data)
     {
-        $this->output($className, $outputPath, $data);
-    }
-
-    private function output(string $className, string $outputPath, array $data)
-    {
+        $className = $data['className'];
+        $dump = $data['dump'];
         $apiName = str_replace(['Request', 'Response'], '', $className);
         $fp = fopen($outputPath . DIRECTORY_SEPARATOR . $className . '.cs', 'w');
 
         fwrite($fp, 'namespace ' . 'test' . PHP_EOL . '{');
-        $this->export($fp, $data, $className, 1, false, $apiName);
+        $this->export($fp, $dump, $className, 1, false, $apiName);
         fwrite($fp, '}');
 
         fclose($fp);

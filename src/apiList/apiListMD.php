@@ -2,31 +2,77 @@
 
 namespace cvOutput\apiList;
 
-// ========================================
-// 一旦ここの内容は保留
-// ========================================
+use cvOutput\apiData;
+
 class apiListMD
 {
-    public function __construct(string $inputPath, string $outputPath, array $data)
+    private string $listTmpl;
+    private string $listText = '';
+    private string $infoTmpl;
+    private string $infoText = '';
+
+    public function __construct()
     {
-        $this->replacement($inputPath, $outputPath, $data);
+        $this->listTmpl = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'apiList.tmpl');
+        $this->infoTmpl = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'apiInfo.tmpl');
     }
 
-    private function replacement(string $inputPath, string $outputPath, array $data)
+    public function create(array $data)
     {
-        $listTmpl = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'apiList.tmpl');
-        $infoTmpl = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'apiInfo.tmpl');
-        // var_export($data);
+        $this->directionExist($data);
 
-        $apiName = $this->getApiName($inputPath);
-        // var_dump($apiName);
+        // リスト作成
+        $this->listText .= sprintf(
+            "|[%s](#%s)|%s|   \n",
+            $data['apiName'],
+            str_replace('/', '', $data['apiName']),
+            $data['Request']['dump']['comment']['description']
+        );
+
+        // 出力用データ整形
+        $this->infoText .= $this->infoTmpl;
+        $this->request($data['Response']);
+        $this->response($data['Response']);
+
+        $this->infoText = str_replace(
+            ['@name@', '@url@'],
+            [
+                $data['apiName'],
+                $data['apiName']
+            ],
+            $this->infoText
+        );
+    }
+
+    /**
+     * RequestとResponseのデータが存在するかどうか
+     *
+     * @param array $data
+     * @return void
+     */
+    private function directionExist(array $data)
+    {
+        if (!(array_key_exists('Response', $data) && array_key_exists('Request', $data))) {
+            // ない！
+
+        }
+    }
+
+    /**
+     * 一覧と詳細を合わせて出力する
+     *
+     * @param string $outputPath
+     * @return void
+     */
+    public function output(string $outputPath)
+    {
         $text = str_replace(
             ['@list@', '@info@'],
             [
-                '',
-                $infoTmpl
+                $this->listText,
+                $this->infoText
             ],
-            $listTmpl
+            $this->listTmpl
         );
 
         $fp = fopen($outputPath . DIRECTORY_SEPARATOR . 'README.md', 'w');
@@ -34,49 +80,106 @@ class apiListMD
         fclose($fp);
     }
 
-    private function createAPIListMD(string $outputFile, array $apiData): bool
+    private function request(array $data)
     {
-        $md = "# API一覧\n| API名 | 機能概要 |\n|----|----|\n";
-        // 目次作成
-        foreach ($apiData as $name => $data) {
-            $name = $data['name'];
-            $link = str_replace('/', '', $data['name']);
-            $comment = preg_replace('/\r?\n/', '<br>', $data['comment']);
-            $md .= sprintf("|[%s](#%s)|%s|\n", $name, $link, $comment);
+        $apiData = $this->createDisplay($data['dump']);
+
+        $this->infoText = str_replace(
+            ['@requestClassName@', '@request@', '@requestInfo@'],
+            [
+                $data['className'],
+                $this->jsonEncode($apiData['sample']),
+                $this->toTableMD($apiData['param'])
+            ],
+            $this->infoText
+        );
+    }
+
+    private function response(array $data)
+    {
+        $apiData = $this->createDisplay($data['dump']);
+
+        $this->infoText = str_replace(
+            ['@responceClassName@', '@responce@', '@responceInfo@'],
+            [
+                $data['className'],
+                $this->jsonEncode($apiData['sample']),
+                $this->toTableMD($apiData['param'])
+            ],
+            $this->infoText
+        );
+    }
+
+
+    /**
+     * 表示するデータの作成
+     *
+     * @param array $data 元になるデータ
+     * @param integer $count createDisplay内でcreateDisplayを使用する時のみ指定
+     * @return array [
+     *      sample => サンプル(jsonにする前の配列
+     *      param => [
+     *          lineNo => 行, name => キー名, type => 型, comment => 値の説明
+     *      ]
+     * ]
+     */
+    private function createDisplay(array $data, int &$count = 1): array
+    {
+        $isTop = ($count === 1);
+        $keys = [
+            'sample' => [],
+            'param' => [],
+            'count' => $count,
+        ];
+
+        $endValue = is_array($data['key']) ? array_key_last($data['key']) : '';
+
+        foreach (array_keys($data['key']) as $value) {
+            $valueData = $data['key'][$value];
+            $count++;
+
+            if (!empty($valueData['key'])) {
+                $keyGet = $this->createDisplay($valueData, $count);
+
+                $keys['sample'][$value] = $keyGet['sample'];
+
+                // /api 以外の値は出力しない
+                if (!$isTop || $value === 'api') {
+                    $keys['param'] += $keyGet['param'];
+                }
+            } elseif (!empty($valueData['rule']['key'])) {
+                $count++;
+                $keyGet = $this->createDisplay($valueData['rule'], $count);
+                $count++;
+                $keys['sample'][$value][] = $keyGet['sample'];
+
+                if (!$isTop || $value === 'api') {
+                    $keys['param'] += $keyGet['param'];
+                }
+            } elseif ($valueData['type'] === 'list' && in_array($valueData['rule']['type'], ['int', 'string', 'float', 'bool'])) {
+                $keys['sample'][$value] = $valueData['message'];
+                $keys['param'][$count] = [
+                    'lineNo' => $count,
+                    'name' => $value,
+                    'type' => $valueData['rule']['type'] . '[]',
+                    'comment' => $valueData['comment'],
+                ];
+            } else {
+                $keys['sample'][$value] = $valueData['message'];
+
+                $keys['param'][$count] = [
+                    'lineNo' => $count,
+                    'name' => $value,
+                    'type' => $valueData['type'],
+                    'comment' => $valueData['comment'],
+                ];
+            }
+
+            if ($endValue === $value)
+                $count++;
         }
-        $md .= "
-API以下のみ詳細を記述<br>
-その他の全API共通仕様に関しては[共通仕様(Common.md)](Common.md)参照
-";
-        foreach ($apiData as $name => $data) {
-            $requestSample = $this->jsonEncode($data['request']['sample']);
-            $responseSample = $this->jsonEncode($data['response']['sample']);
-            $requestTable = $this->toTableMD($data['request']['param']);
-            $responseTable = $this->toTableMD($data['response']['param']);
-            $md .= sprintf('
-# %s
-## URL
->http://xxx.xxxx.xxx.xxx/%s
-## Request
-### Class
-`%s`
-### Key
-```
-%s
-```
-%s
-## Responce
-### Class
-`%s`
-### Key
-```
-%s
-```
-%s
-<br>
-', $name, $name, $data['request']['className'], $requestSample, $requestTable, $data['response']['className'], $responseSample, $responseTable);
-        }
-        return file_put_contents($outputFile, $md);
+
+        return $keys;
     }
 
     /**
@@ -110,31 +213,10 @@ API以下のみ詳細を記述<br>
         if (empty($array)) {
             return '';
         }
-        $result = '|行|キー名|型|値の説明|
-|----|----|----|----|
-';
+        $result = "|行|キー名|型|値の説明|\n|----|----|----|----|\n";
         foreach ($array as $row) {
             $result .= '|' . implode('|', $row) . "|\n";
         }
         return $result;
-    }
-
-    private function getApiName(string $file): string
-    {
-        $file = strtolower($file);
-        $file = preg_replace('@/(response|request)\.yml@', '', $file);
-        return $file;
-    }
-
-    /**
-     * @param string $file
-     * @return string (request|response)
-     */
-    private function getDirection(string $file): string
-    {
-        if (strpos($file, 'Request.yml') === false) {
-            return 'response';
-        }
-        return 'request';
     }
 }
