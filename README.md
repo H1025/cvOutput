@@ -26,7 +26,8 @@
 UnityでHTTP通信を行う際のインターフェースを規定することを主目的としており、これに準じた制約が含まれている
 
 ## 対応フォーマット
-hash validatorはPHPでの連想配列,jsonファイル,yamlファイルに対応していたが、本ツールでは<span style="color: red; ">yamlのみ対応</span>する
+
+hash validatorはPHPでの連想配列,jsonファイル,yamlファイルに対応していたが、本ツールでは**yamlのみ**対応する
 
 <br>
 
@@ -36,19 +37,21 @@ hash validatorはPHPでの連想配列,jsonファイル,yamlファイルに対�
 
 ### Yamlファイルの記法に関して
 
-**[ファイル名]**
+#### [ファイル名]
 
 inputPathはディレクトリ指定
 指定したディレクトリ以下の、ファイル名規則に沿ったファイル全てを対象とする
 
-**[ファイル名規則]**
+#### [ファイル名規則]
+
 > Request(Response).yml
 
-**[sample]**  
+#### [sample]
 
 inputPathで指定したディレクトリの1つ下のパスから、ファイル名を含めないファイルのパスまでをAPI名にする
 
-* ファイル構成:
+* ファイル構成
+
 ```
 .
 └── hoge_dir
@@ -59,19 +62,19 @@ inputPathで指定したディレクトリの1つ下のパスから、ファイ�
                 └── Response.yml
 ```
 
-* inputPath:
+* inputPath
+
 ```
 ./hoge_dir/fuga_dir
 ```
 
-* クラス名:
-
+* クラス名
 
     - hogefugaRequest
 
     - hogefugaResponse
 
-* API名:
+* API名
 
 ``
 hoge/fuga
