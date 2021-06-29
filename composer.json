@@ -3,7 +3,7 @@
   "license": "MIT",
   "require": {
     "php": ">= 7.4.0",
-    "mihoshi/hashvalidator": "*",
+    "mihoshi/hashvalidator": "1.*",
     "ext-yaml":"*",
     "ext-json":"*"
   },
