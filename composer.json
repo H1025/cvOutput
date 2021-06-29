@@ -1,5 +1,6 @@
 {
   "name": "h1025/cvoutput",
+  "license": "MIT",
   "require": {
     "php": ">= 7.4.0",
     "mihoshi/hashvalidator": "*",
