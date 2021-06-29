@@ -13,6 +13,8 @@
 
 [対応フォーマット](#対応フォーマット)
 
+[使い方](#使い方)
+
 [C# ファイル作成](#c-ファイル作成)
 
 - [Yamlファイルの記法に関して](#yamlファイルの記法に関して)
@@ -28,6 +30,14 @@ UnityでHTTP通信を行う際のインターフェースを規定すること�
 ## 対応フォーマット
 
 hash validatorはPHPでの連想配列,jsonファイル,yamlファイルに対応していたが、本ツールでは**yamlのみ**対応する
+
+## 使い方
+
+```php
+include_once './src/output.php';
+
+(new cvOutput\output($inputPath))->csharp($outputPath);
+```
 
 <br>
 
@@ -46,7 +56,7 @@ inputPathはディレクトリ指定
 
 > Request(Response).yml
 
-#### [sample]
+#### [例]
 
 inputPathで指定したディレクトリの1つ下のパスから、ファイル名を含めないファイルのパスまでをAPI名にする
 
@@ -79,3 +89,5 @@ inputPathで指定したディレクトリの1つ下のパスから、ファイ�
 ``
 hoge/fuga
 ``
+
+<br>
