@@ -3,8 +3,6 @@
 * [hash validator](https://github.com/m-seikou/hashValidator) でのバリデーションルールをもとに同等のデータ構造を持つクラスのC#コードを生成させる。  
 * namespaceやクラス名,extendなど固有の値を明示することになるため、hashRuleを拡張したルールを使用することで実現している。
 
-<br>
-
 ***
 
 <br>
@@ -15,22 +13,20 @@
 
 [対応フォーマット](#対応フォーマット)
 
-[C# ファイル作成](#C#-ファイル作成)
+[C# ファイル作成](#c-ファイル作成)
 
-- [Yamlファイルの記法に関して](#Yamlファイルの記法に関して)
+- [Yamlファイルの記法に関して](#yamlファイルの記法に関して)
 
 <br>
 
 ***
-
-<br>
 
 ## 制限事項
 
 UnityでHTTP通信を行う際のインターフェースを規定することを主目的としており、これに準じた制約が含まれている
 
 ## 対応フォーマット
-hash validatorはPHPでの連想配列,jsonファイル,yamlファイルに対応していたが、本ツールでは**yamlのみ対応**する
+hash validatorはPHPでの連想配列,jsonファイル,yamlファイルに対応していたが、本ツールでは<span style="color: red; ">yamlのみ対応</span>する
 
 <br>
 
@@ -52,11 +48,31 @@ inputPathはディレクトリ指定
 
 inputPathで指定したディレクトリの1つ下のパスから、ファイル名を含めないファイルのパスまでをAPI名にする
 
-* ファイル構成:  
-hoge/hogehoge/fuga/fugafuga/Request.yml
+* ファイル構成:
+```
+.
+└── hoge_dir
+    └── fuga_dir
+        └── hoge
+            └── fuga
+                ├── Request.yml
+                └── Response.yml
+```
 
-* inputPath:  
-hoge/hogehoge
+* inputPath:
+```
+./hoge_dir/fuga_dir
+```
 
-* API名:  
-fuga/fugafuga
+* クラス名:
+
+
+    - hogefugaRequest
+
+    - hogefugaResponse
+
+* API名:
+
+``
+hoge/fuga
+``
