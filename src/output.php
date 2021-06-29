@@ -10,8 +10,6 @@ use mihoshi\hashValidator\hashValidator;
 class output
 {
     private array $apiData;
-    /** @var apiData[] $apiData */
-    // private array $apiData;
 
     /**
      * output constructor
