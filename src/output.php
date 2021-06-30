@@ -18,7 +18,7 @@ class output
      */
     public function __construct(string $inputPath)
     {
-        $this->input(realpath($inputPath));
+        $this->input($this->fileCheck($inputPath));
     }
 
     public function csharp(string $outputPath)
@@ -38,7 +38,7 @@ class output
             $data['apiName'] = $apiName;
             $apiListMD->create($data);
         }
-        $apiListMD->output($outputPath);
+        $apiListMD->output($this->fileCheck($outputPath));
     }
 
     /**
@@ -115,5 +115,23 @@ class output
         $file = strtolower($file);
         $file = preg_replace('@/(response|request)\.yml@', '', $file);
         return $file;
+    }
+
+    /**
+     * ファイルの存在チェック
+     * 絶対パスで返す
+     *
+     * @param string $path
+     * @return string
+     */
+    private function fileCheck(string $path): string
+    {
+        $realpath = realpath($path);
+        if(!$realpath)
+        {
+            throw new InvalidArgumentException($path);
+        }
+
+        return $realpath;
     }
 }

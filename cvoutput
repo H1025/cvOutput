@@ -1,0 +1,12 @@
+#!/usr/bin/env php
+<?php
+
+include_once __DIR__.'/vendor/autoload.php';
+
+if($argv[1] === "csharp"){
+    (new cvOutput\output($argv[2]))->csharp($argv[3]);
+}elseif($argv[1] === "md"){
+    (new cvOutput\output($argv[2]))->apiListMD($argv[3]);
+}else{
+    echo "type not find: $argv[1]\n";
+}

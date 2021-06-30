@@ -33,11 +33,12 @@ hash validatorはPHPでの連想配列,jsonファイル,yamlファイルに対�
 
 ## 使い方
 
-```php
-include_once './src/output.php';
-
-(new cvOutput\output($inputPath))->csharp($outputPath);
 ```
+# ./cvoutput [type] [inputDir] [outputDir]
+```
+### type一覧
+- csharp
+- md
 
 <br>
 

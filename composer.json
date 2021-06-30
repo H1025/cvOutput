@@ -25,5 +25,8 @@
       "type": "vcs",
       "url": "https://github.com/m-seikou/hashValidator.git"
     }
+  ],
+  "bin": [
+    "cvoutput"
   ]
 }
