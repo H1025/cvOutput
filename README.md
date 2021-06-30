@@ -19,6 +19,8 @@
 
 - [Yamlファイルの記法に関して](#yamlファイルの記法に関して)
 
+[API仕様書 作成](#api仕様書-作成)
+
 <br>
 
 ***
@@ -37,8 +39,11 @@ hash validatorはPHPでの連想配列,jsonファイル,yamlファイルに対�
 # ./cvoutput [type] [inputDir] [outputDir]
 ```
 ### type一覧
+
 - csharp
+  - [C# ファイル作成](#c-ファイル作成)
 - md
+  - [API仕様書 作成](#api仕様書-作成)
 
 <br>
 
@@ -92,3 +97,8 @@ hoge/fuga
 ``
 
 <br>
+
+## API仕様書 作成
+
+## 出力
+- outputPath直下にAPI名、URL、key等が一覧になったREADME.mdとして出力されます。
