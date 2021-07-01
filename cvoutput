@@ -1,7 +1,12 @@
 #!/usr/bin/env php
 <?php
 
-include_once __DIR__.'/vendor/autoload.php';
+foreach (array(__DIR__ . '/../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php') as $file) {
+    if (file_exists($file)) {
+        include_once $file;
+        break;
+    }
+}
 
 if($argv[1] === "csharp"){
     (new cvOutput\output($argv[2]))->csharp($argv[3]);
