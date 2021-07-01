@@ -74,8 +74,12 @@ class apiListMD
      */
     private function directionExist(array $data)
     {
-        if (!(array_key_exists('response', $data) && array_key_exists('request', $data))) {
-            throw new InvalidArgumentException();
+        if (!array_key_exists('response', $data)) {
+            throw new InvalidArgumentException($data['apiName'] . ": response file not found ");
+        }
+
+        if (!array_key_exists('request', $data)) {
+            throw new InvalidArgumentException($data['apiName'] . ": request file not found ");
         }
     }
 
@@ -151,7 +155,7 @@ class apiListMD
                     $keys['param'] += $keyGet['param'];
                 }
             } elseif ($valueData['type'] === 'list' && in_array($valueData['rule']['type'], ['int', 'string', 'float', 'bool'])) {
-                $keys['sample'][$value] = $valueData['message'];
+                $keys['sample'][$value] = $valueData['comment']['example'];
                 $keys['param'][$count] = [
                     'lineNo' => $count,
                     'name' => $value,
@@ -159,7 +163,7 @@ class apiListMD
                     'comment' => $valueData['comment']['description'],
                 ];
             } else {
-                $keys['sample'][$value] = $valueData['message'];
+                $keys['sample'][$value] = $valueData['comment']['example'];
 
                 $keys['param'][$count] = [
                     'lineNo' => $count,
