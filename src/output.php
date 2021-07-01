@@ -48,8 +48,7 @@ class output
      */
     public function input(string $inputPath)
     {
-        $cwd = getcwd();
-        foreach ($this->find($cwd, []) as $file) {
+        foreach ($this->find($inputPath, []) as $file) {
             $filePath = str_replace($inputPath . DIRECTORY_SEPARATOR, '', $file);
             $className = str_replace([DIRECTORY_SEPARATOR, '.yml'], '', $filePath);
             $apiName = $this->getApiName($filePath);
@@ -85,12 +84,13 @@ class output
             }
             $list[] = $path . DIRECTORY_SEPARATOR . $file;
         }
+
         return $list;
     }
 
     /**
      * RequestかResponseか
-     * 
+     *
      * @param string $file
      * @return string (request|response)
      */
